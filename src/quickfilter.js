@@ -22,6 +22,7 @@
 
   var QF = function(selector) {
     this.nodes = [];
+    this.filterSets = {};
     
     if(!_initializing) {
       this.selector = selector;
@@ -32,11 +33,22 @@
   QF.prototype = {
     selector: undefined,
     nodeSelector: '.node',
+    filterSetSelector: '.filter-set',
+    filterSetId: 'filter-set-id',
+    filterSelector: '.filter',
+
 
     /* process a node (dom element), returns data object */
     processNode: function (node) {
       return({
         element: node
+      });
+    },
+
+    /* process a filter set (dom element), return data object */
+    processFilterSet: function (filterSet) {
+      return({
+        name: $(filterSet).data('filter-set-id')
       });
     },
     
@@ -45,6 +57,12 @@
       $(this.nodeSelector, this.selector).each(function() {
         var data = q.processNode(this);
         q.nodes.push(data);
+      });
+
+
+      $(this.filterSetSelector, this.selector).each(function() {
+        var data = q.processFilterSet(this);
+        q.filterSets[data.name] = data;
       });
     }
   };
