@@ -8,6 +8,10 @@
 
   <script src='lib/jquery/jquery-1.10.2.js'></script>
 
+  <script>
+    this.QF = "old qf";
+  </script>
+
   <script src='../src/quickfilter.js'></script>
 
   <script src='lib/qunit/qunit-1.11.0.js'></script>
@@ -20,6 +24,19 @@
   <div id='qunit-fixture'>
 
     <!-- any HTML you want to be present in each test (will be reset for each test) -->
+
+    <div id="container">
+      
+      <div id="filter-nodes">
+        <div class="node">
+          <h2>Node A</h2>
+        </div>
+        <div class="node">
+          <h2>Node B</h2>
+        </div>
+      </div>
+
+    </div>
 
   </div>
 
