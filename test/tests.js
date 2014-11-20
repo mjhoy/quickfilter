@@ -50,3 +50,9 @@ test("sets multiple filter set data correctly", function () {
 
   deepEqual([ "c-1", "c-2" ], $('#node-1').data('qf-fs-color'));
 });
+
+test("sets current filter arrays", function () {
+  var qf = QF.create({selector: "#container"});
+  deepEqual([], qf.currentFilters.color);
+  deepEqual([], qf.currentFilters.gender);
+});

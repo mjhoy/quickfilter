@@ -23,6 +23,7 @@
   var QF = function(selector) {
     this.nodes = [];
     this.filterSets = {};
+    this.currentFilters = {};
 
     if(!_initializing) {
       this.selector = selector;
@@ -51,8 +52,10 @@
     },
 
     processFilterSet: function (filterSet) {
+      var name = $(filterSet).data('filter-set-id');
+      this.currentFilters[name] = [];
       return({
-        name: $(filterSet).data('filter-set-id')
+        name: name
       });
     },
 
