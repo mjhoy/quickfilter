@@ -7,6 +7,7 @@
   <link rel='stylesheet' href='lib/qunit/qunit-1.11.0.css'>
 
   <script src='lib/jquery/jquery-1.10.2.js'></script>
+  <script src='lib/underscore/underscore-1.7.0.js'></script>
 
   <script>
     this.QF = "old qf";
@@ -36,14 +37,14 @@
         <div class="filter-set" data-filter-set-id="gender">
           <div class="filter" data-filter-id="g-1">Male</div>
           <div class="filter" data-filter-id="g-2">Female</div>
-        </div>        
+        </div>
       </div>
-      
+
       <div id="filter-nodes">
-        <div class="node">
+        <div class="node" data-color="c-1,c-2" data-gender="g-1" id="node-1">
           <h2>Node A</h2>
         </div>
-        <div class="node">
+        <div class="node" data-color="c-2 " id="node-2">
           <h2>Node B</h2>
         </div>
       </div>

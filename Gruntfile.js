@@ -7,6 +7,14 @@ module.exports = function(grunt) {
     },
     browserDependencies: {
       "options": {},
+      "underscore": {
+        "dir": "test/lib/underscore",
+        "files": [
+          {
+            "underscore-1.7.0.js": "http://underscorejs.org/underscore.js"
+          }
+        ],
+      },
       "jquery": {
         "dir": "test/lib/jquery",
         "files": [

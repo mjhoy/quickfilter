@@ -23,7 +23,7 @@
   var QF = function(selector) {
     this.nodes = [];
     this.filterSets = {};
-    
+
     if(!_initializing) {
       this.selector = selector;
       this.init();
@@ -37,33 +37,37 @@
     filterSetId: 'filter-set-id',
     filterSelector: '.filter',
 
-
-    /* process a node (dom element), returns data object */
     processNode: function (node) {
-      return({
-        element: node
+      node = $(node);
+      // Initialize all filtersets on this node
+      _.each(this.filterSets, function(__, key) {
+        var list = [];
+
+        if (node.data(key))
+          list = (node.data(key)+'').split(',');
+
+        node.data('qf-fs-'+key, list);
       });
     },
 
-    /* process a filter set (dom element), return data object */
     processFilterSet: function (filterSet) {
       return({
         name: $(filterSet).data('filter-set-id')
       });
     },
-    
+
     init: function () {
       var q = this;
-      $(this.nodeSelector, this.selector).each(function() {
-        var data = q.processNode(this);
-        q.nodes.push(data);
-      });
-
 
       $(this.filterSetSelector, this.selector).each(function() {
         var data = q.processFilterSet(this);
         q.filterSets[data.name] = data;
       });
+
+      var nodes = $(this.nodeSelector, this.selector).each(function() {
+        q.processNode(this);
+      });
+      q.nodes = nodes;
     }
   };
 
