@@ -79,3 +79,18 @@ test("toggling a filter", function () {
 
   deepEqual([], qf.currentFilters.color);
 });
+
+test("deactivated projects", function () {
+  var deactivated = [];
+  var qf = QF.create({
+    selector: "#container",
+    deactivateNode: function (node) {
+      deactivated.push(node.attr('id'));
+    }
+  });
+
+  deepEqual([], deactivated);
+  qf.activate($("#c-1"));
+  deepEqual(["node-2"], deactivated);
+
+});

@@ -39,6 +39,10 @@
     filterSelector: '.filter',
     filterId: 'filter-id',
 
+    deactivateNode: function (node) {
+      node.addClass('disabled');
+    },
+
     processNode: function (node) {
       node = $(node);
       // Initialize all filtersets on this node
@@ -88,14 +92,39 @@
       var filterSet = ln.data('qs-filterSet');
       var filterId =  ln.data('qs-filterId');
       var currentSet = this.currentFilters[filterSet];
+      var restrictOnly = true;
       if (_.indexOf(currentSet, filterId) === -1) {
         // Filter not active
         currentSet.push(filterId);
       } else {
         // Filter active
+        restrictOnly = false;
         this.currentFilters[filterSet] = _.without(currentSet, filterId);
       }
-    }
+      this.filter(restrictOnly);
+    },
+
+    // Run the current filter list
+    filter: function (restrictOnly) {
+      var q = this;
+      $(this.nodeSelector, this.selector).each(function () {
+        var node = $(this);
+        var included = true;
+        _.find(q.filterSets, function (__, set) {
+          var filters = q.currentFilters[set];
+          if (filters.length) {
+            var nodeFilters = node.data('qf-fs-'+set);
+            if (_.intersection(filters, nodeFilters).length != filters.length) {
+              included = false;
+              return true;
+            }
+          }
+          return false;
+        });
+        if (!included)
+          q.deactivateNode(node);
+      });
+    },
   };
 
   QF.extend = function(prop) {
