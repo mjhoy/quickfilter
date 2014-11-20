@@ -37,6 +37,7 @@
     filterSetSelector: '.filter-set',
     filterSetId: 'filter-set-id',
     filterSelector: '.filter',
+    filterId: 'filter-id',
 
     processNode: function (node) {
       node = $(node);
@@ -52,8 +53,17 @@
     },
 
     processFilterSet: function (filterSet) {
-      var name = $(filterSet).data('filter-set-id');
+      filterSet = $(filterSet);
+      var name = filterSet.data('filter-set-id');
       this.currentFilters[name] = [];
+
+      var q = this;
+
+      $(this.filterSelector, filterSet).each(function (filter) {
+        $(this).data('qs-filterSet', name);
+        $(this).data('qs-filterId', $(this).data(q.filterId));
+      });
+
       return({
         name: name
       });
@@ -71,6 +81,20 @@
         q.processNode(this);
       });
       q.nodes = nodes;
+    },
+
+    // Set filter element `ln` as active
+    activate: function (ln) {
+      var filterSet = ln.data('qs-filterSet');
+      var filterId =  ln.data('qs-filterId');
+      var currentSet = this.currentFilters[filterSet];
+      if (_.indexOf(currentSet, filterId) === -1) {
+        // Filter not active
+        currentSet.push(filterId);
+      } else {
+        // Filter active
+        this.currentFilters[filterSet] = _.without(currentSet, filterId);
+      }
     }
   };
 

@@ -1,5 +1,8 @@
 module("sanity");
 
+// noop
+function xtest() {}
+
 test("preserves old root QF object", function () {
   equal(QF.old_qf, "old qf");
 });
@@ -55,4 +58,24 @@ test("sets current filter arrays", function () {
   var qf = QF.create({selector: "#container"});
   deepEqual([], qf.currentFilters.color);
   deepEqual([], qf.currentFilters.gender);
+});
+
+test("sets filter set for each filter", function () {
+  var qf = QF.create({selector: "#container"});
+
+  equal("color", $('#c-1').data('qs-filterSet'));
+});
+
+test("setting a filter", function () {
+  var qf = QF.create({selector: "#container"});
+  qf.activate($("#c-1"));
+  deepEqual(["c-1"], qf.currentFilters.color);
+});
+
+test("toggling a filter", function () {
+  var qf = QF.create({selector: "#container"});
+  qf.activate($("#c-1"));
+  qf.activate($("#c-1"));
+
+  deepEqual([], qf.currentFilters.color);
 });
