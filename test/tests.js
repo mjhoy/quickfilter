@@ -80,17 +80,52 @@ test("toggling a filter", function () {
   deepEqual([], qf.currentFilters.color);
 });
 
-test("deactivated projects", function () {
-  var deactivated = [];
+test("disableNode: called on disable", function () {
+  var disabled = [];
   var qf = QF.create({
     selector: "#container",
-    deactivateNode: function (node) {
-      deactivated.push(node.attr('id'));
+    disableNode: function (node) {
+      disabled.push(node.attr('id'));
     }
   });
 
-  deepEqual([], deactivated);
+  deepEqual([], disabled);
   qf.toggleFilter($("#c-1"));
-  deepEqual(["node-2"], deactivated);
+  deepEqual(["node-2"], disabled);
+});
 
+
+test("activateNode: all enabled by default", function () {
+  var activated = [];
+  var qf = QF.create({
+    selector: "#container",
+    activateNode: function (node) {
+      activated.push(node.attr('id'));
+    }
+  });
+
+  deepEqual(["node-1", "node-2"], activated);
+  ok(qf.nodes.is(qf.activeNodes));
+});
+
+test("activeNodes after filter", function () {
+  var qf = QF.create({
+    selector: "#container"
+  });
+  
+  qf.toggleFilter($("#c-1"));
+  ok(qf.activeNodes.is($("#node-1")));
+  ok(!qf.activeNodes.is($("#node-2")));     
+});
+
+test("activeNodes after toggling filter", function () {
+  var qf = QF.create({
+    selector: "#container"
+  });
+  
+  qf.toggleFilter($("#c-1"));
+  qf.toggleFilter($("#c-1"));
+  
+  ok(qf.activeNodes.is($("#node-1")));
+  ok(qf.activeNodes.is($("#node-2")));     
 });

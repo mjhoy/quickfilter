@@ -52,8 +52,25 @@
     // string
     filterId: 'filter-id',
 
-    deactivateNode: function (node) {
+    disableNode: function (node) {
       node.addClass('disabled');
+    },
+
+    activateNode: function (node) {
+      node.removeClass('disabled');
+    },
+
+    // Internal functions
+    _disableNode: function (node) {
+      this.activeNodes = this.activeNodes.not(node);
+      this.disabledNodes = this.disabledNodes.add(node);
+      this.disableNode(node);
+    },
+
+    _activateNode: function (node) {
+      this.activeNodes = this.activeNodes.add(node);
+      this.disabledNodes = this.disabledNodes.not(node);
+      this.activateNode(node);
     },
 
     processNode: function (node) {
@@ -81,23 +98,29 @@
         $(this).data('qs-filterId', $(this).data(q.filterId));
       });
 
-      return({
-        name: name
-      });
+      this.filterSets[name] = { name: name };
+    },
+
+    scoped: function (selector) {
+      return $(selector, this.selector);
     },
 
     init: function () {
       var q = this;
 
-      $(this.filterSetSelector, this.selector).each(function() {
-        var data = q.processFilterSet(this);
-        q.filterSets[data.name] = data;
+      // Process filter sets
+      this.scoped(this.filterSetSelector).each(function () {
+        q.processFilterSet(this);
       });
 
-      var nodes = $(this.nodeSelector, this.selector).each(function() {
+      var nodes = this.scoped(this.nodeSelector).each(function() {
         q.processNode(this);
+        q.activateNode($(this));
       });
-      q.nodes = nodes;
+
+      this.nodes = nodes;
+      this.activeNodes = nodes;
+      this.disabledNodes = $();
     },
 
     // Set filter element `ln` as active
@@ -105,22 +128,38 @@
       var filterSet = ln.data('qs-filterSet');
       var filterId =  ln.data('qs-filterId');
       var currentSet = this.currentFilters[filterSet];
-      var restrictOnly = true;
+      var restrict;
       if (_.indexOf(currentSet, filterId) === -1) {
-        // Filter not active
+        // Filter not active, turn it on
         currentSet.push(filterId);
+        restrict = "active";
       } else {
-        // Filter active
-        restrictOnly = false;
+        // Filter active, turn it off
         this.currentFilters[filterSet] = _.without(currentSet, filterId);
+        restrict = "disabled";
       }
-      this.filter(restrictOnly);
+      this.filter(restrict);
     },
 
     // Run the current filter list
-    filter: function (restrictOnly) {
+    //
+    // `restrict` is optional and purely for optimization. If it falsey,
+    // check over the entire node collection. If it is "active", check only
+    // active nodes. If it is "disabled", check only the disabled nodes.
+    filter: function (restrict) {
       var q = this;
-      $(this.nodeSelector, this.selector).each(function () {
+      var set;
+      switch(restrict) {
+      case "active":
+        set = this.activeNodes;
+        break;
+      case "disabled":
+        set = this.disabledNodes;
+        break;
+      default:
+        set = this.nodes;
+      }
+      set.each(function () {
         var node = $(this);
         var included = true;
         _.find(q.filterSets, function (__, set) {
@@ -134,8 +173,11 @@
           }
           return false;
         });
-        if (!included)
-          q.deactivateNode(node);
+        if (!included) {
+          q._disableNode(node);
+        } else {
+          q._activateNode(node);
+        }
       });
     },
   };
