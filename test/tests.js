@@ -68,14 +68,14 @@ test("sets filter set for each filter", function () {
 
 test("setting a filter", function () {
   var qf = QF.create({selector: "#container"});
-  qf.activate($("#c-1"));
+  qf.toggleFilter($("#c-1"));
   deepEqual(["c-1"], qf.currentFilters.color);
 });
 
 test("toggling a filter", function () {
   var qf = QF.create({selector: "#container"});
-  qf.activate($("#c-1"));
-  qf.activate($("#c-1"));
+  qf.toggleFilter($("#c-1"));
+  qf.toggleFilter($("#c-1"));
 
   deepEqual([], qf.currentFilters.color);
 });
@@ -90,7 +90,7 @@ test("deactivated projects", function () {
   });
 
   deepEqual([], deactivated);
-  qf.activate($("#c-1"));
+  qf.toggleFilter($("#c-1"));
   deepEqual(["node-2"], deactivated);
 
 });

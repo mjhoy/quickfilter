@@ -88,7 +88,7 @@
     },
 
     // Set filter element `ln` as active
-    activate: function (ln) {
+    toggleFilter: function (ln) {
       var filterSet = ln.data('qs-filterSet');
       var filterId =  ln.data('qs-filterId');
       var currentSet = this.currentFilters[filterSet];
