@@ -32,11 +32,24 @@
   };
 
   QF.prototype = {
+    // Selector that will scope all DOM queries.
     selector: undefined,
+
+    // Selector for `node` elements
     nodeSelector: '.node',
+
+    // Selector for `filterSet` elements
     filterSetSelector: '.filter-set',
+
+    // Data attribute on filterSet elements that provide a unique ID
+    // string
     filterSetId: 'filter-set-id',
+
+    // Selector for `filter` elements
     filterSelector: '.filter',
+
+    // Data attribute on filter elements that provide a unique ID
+    // string
     filterId: 'filter-id',
 
     deactivateNode: function (node) {
