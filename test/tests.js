@@ -7,21 +7,6 @@ test("preserves old root QF object", function () {
   equal(QF.old_qf, "old qf");
 });
 
-module("nodes");
-
-test("finds nodes and stores elements", function() {
-  var qf = QF.create({
-    selector: "#container",
-  });
-
-  var node_headings = [];
-  for(var i = 0; i < qf.nodes.length; i++) {
-    var node = $(qf.nodes[i]);
-    node_headings.push($(node).find('h2').text());
-  }
-  deepEqual(node_headings, ["Node A", "Node B"]);
-});
-
 module("filters");
 
 test("finds filters, filter sets", function() {
@@ -91,7 +76,8 @@ test("disableNode: called on disable", function () {
 
   deepEqual([], disabled);
   qf.toggleFilter($("#c-1"));
-  deepEqual(["node-2"], disabled);
+  ok(_.contains(disabled, "node-2"));
+  ok(!_.contains(disabled, "node-1"));
 });
 
 
@@ -104,7 +90,8 @@ test("activateNode: all enabled by default", function () {
     }
   });
 
-  deepEqual(["node-1", "node-2"], activated);
+  ok(_.contains(activated, "node-1"));
+  ok(_.contains(activated, "node-2"));
   ok(qf.nodes.is(qf.activeNodes));
 });
 
@@ -128,4 +115,20 @@ test("activeNodes after toggling filter", function () {
   
   ok(qf.activeNodes.is($("#node-1")));
   ok(qf.activeNodes.is($("#node-2")));     
+});
+
+test("activeNodes after multiple filters", function () {
+  var qf = QF.create({
+    selector: "#container"
+  });
+
+  ok(qf.activeNodes.is('#node-1'));
+  ok(qf.activeNodes.is('#node-2'));
+  ok(qf.activeNodes.is('#node-3'));
+
+  qf.toggleFilter($('#c-2'));
+  ok(!qf.activeNodes.is('#node-3'));
+  ok(qf.activeNodes.is('#node-1'));
+  ok(qf.activeNodes.is('#node-2'));
+
 });

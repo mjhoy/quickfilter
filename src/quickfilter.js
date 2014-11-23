@@ -80,7 +80,9 @@
         var list = [];
 
         if (node.data(key))
-          list = (node.data(key)+'').split(',');
+          list = _.map((node.data(key)+'').split(','), function (s) {
+            return s.trim();
+          });
 
         node.data('qf-fs-'+key, list);
       });
