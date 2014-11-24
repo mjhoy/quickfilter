@@ -124,6 +124,7 @@
 
       this.filterSets[name] = {
         name: name,
+        el: filterSet,
         filters: filters
       };
     },
@@ -243,6 +244,11 @@
       });
       for (key in filtersToEnable) {
         filtersToEnable[key].removeClass('disabled');
+        if (filtersToEnable[key].length === 0) {
+          this.filterSets[key].el.addClass('disabled');
+        } else {
+          this.filterSets[key].el.removeClass('disabled');
+        }
       }
     }
   };

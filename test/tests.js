@@ -198,3 +198,16 @@ test("filters are disabled", function () {
   ok(!c2.hasClass('disabled'));
   ok(c3.hasClass('disabled'));
 });
+
+test("empty filer sets are hidden", function () {
+  var qf = QF.create({
+    selector: "#container"
+  });
+  ok(!$('#drink-choice').hasClass('disabled'));
+
+  qf.toggleFilter($('#c-1'));
+
+  ok($('#drink-choice').hasClass('disabled'));
+  ok(!$('#gender').hasClass('disabled'));
+  ok(!$('#color').hasClass('disabled'));
+});
