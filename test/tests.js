@@ -50,7 +50,7 @@ test("sets current filter arrays", function () {
 test("sets filter set for each filter", function () {
   var qf = QF.create({selector: "#container"});
 
-  equal("color", $('#c-1').data('qs-filterSet'));
+  equal("color", $('#c-1').data('qf-filterSet'));
 });
 
 test("setting a filter", function () {
@@ -101,22 +101,22 @@ test("activeNodes after filter", function () {
   var qf = QF.create({
     selector: "#container"
   });
-  
+
   qf.toggleFilter($("#c-1"));
   ok(qf.activeNodes.is($("#node-1")));
-  ok(!qf.activeNodes.is($("#node-2")));     
+  ok(!qf.activeNodes.is($("#node-2")));
 });
 
 test("activeNodes after toggling filter", function () {
   var qf = QF.create({
     selector: "#container"
   });
-  
+
   qf.toggleFilter($("#c-1"));
   qf.toggleFilter($("#c-1"));
-  
+
   ok(qf.activeNodes.is($("#node-1")));
-  ok(qf.activeNodes.is($("#node-2")));     
+  ok(qf.activeNodes.is($("#node-2")));
 });
 
 test("activeNodes after multiple filters", function () {

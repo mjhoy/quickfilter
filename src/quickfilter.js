@@ -96,8 +96,13 @@
       var q = this;
 
       $(this.filterSelector, filterSet).each(function (filter) {
-        $(this).data('qs-filterSet', name);
-        $(this).data('qs-filterId', $(this).data(q.filterId));
+        $(this).data('qf-filterSet', name);
+        $(this).data('qf-filterId', $(this).data(q.filterId)+'');
+      });
+
+      filterSet.on('click', this.filterSelector, function() {
+        q.toggleFilter($(this));
+        return false;
       });
 
       this.filterSets[name] = { name: name };
@@ -127,8 +132,8 @@
 
     // Set filter element `ln` as active
     toggleFilter: function (ln) {
-      var filterSet = ln.data('qs-filterSet');
-      var filterId =  ln.data('qs-filterId');
+      var filterSet = ln.data('qf-filterSet');
+      var filterId =  ln.data('qf-filterId');
       var currentSet = this.currentFilters[filterSet];
       var restrict;
       if (_.indexOf(currentSet, filterId) === -1) {
