@@ -7,8 +7,8 @@
 
   A quick & dirty filtering interface for a static page.
 
-development
------------
+
+DEVELOPMENT
 
   Inside the quickfilter directory run
 
@@ -21,15 +21,15 @@ development
   (you may need to run `npm install -g grunt-cli` first).
   This runs the tests.
 
-license
--------
+
+LICENSE
 
   MIT; see the LICENSE file
 
-in the wild
------------
 
-https://www.msi.ucl.ac.uk/research
+IN THE WILD
+
+  https://www.msi.ucl.ac.uk/research
 
 
 -----------------------------------
