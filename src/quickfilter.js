@@ -172,6 +172,19 @@
       this.disabledNodes = $();
     },
 
+    // reset all filters
+    reset: function () {
+      var f;
+      for (var key in this.currentFilters) {
+        f = this.currentFilters[key];
+        for (var i = 0; i < f.length; i++) {
+          this.toggleFilter(
+            this.scoped('[data-filter-set-id="'+key+'"] [data-filter-id="'+f[i]+'"]')
+          );
+        }
+      }
+    },
+
     trigger: function (name, args) {
       return $(this.selector).trigger(name, args);
     },

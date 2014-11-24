@@ -240,3 +240,25 @@ test("exclusive filter sets disable non-active filters", function () {
   ok(!c3.hasClass('disabled'));
 
 });
+
+module("reset");
+
+test("reset resets all filters", function () {
+  var qf = QF.create({
+    selector: "#container"
+  });
+  var c1 = $('#c-1');
+  var c2 = $('#c-2');
+  var c3 = $('#c-3');
+
+  qf.toggleFilter($('#c-1'));
+  qf.toggleFilter($('#c-2'));
+
+  qf.reset();
+
+  ok(!c1.hasClass('disabled'));
+  ok(!c2.hasClass('disabled'));
+  ok(!c3.hasClass('disabled'));
+
+  ok(qf.activeNodes.is(qf.nodes));
+});
