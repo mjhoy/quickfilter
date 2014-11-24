@@ -74,14 +74,6 @@
       filter.removeClass('active');
     },
 
-    activateFilter: function (filter) {
-
-    },
-
-    disableFilter: function (filter) {
-
-    },
-
     // Internal functions
     _disableNode: function (node) {
       this.activeNodes = this.activeNodes.not(node);
@@ -117,7 +109,7 @@
 
       var q = this;
 
-      $(this.filterSelector, filterSet).each(function (filter) {
+      var filters = $(this.filterSelector, filterSet).each(function (filter) {
         $(this).data('qf-filterSet', name);
         // TODO: older jquerys may have different behavior in
         // extracting numeric strings as data attributes (so
@@ -130,7 +122,10 @@
         return false;
       });
 
-      this.filterSets[name] = { name: name };
+      this.filterSets[name] = {
+        name: name,
+        filters: filters
+      };
     },
 
     scoped: function (selector) {
@@ -155,6 +150,10 @@
       this.disabledNodes = $();
     },
 
+    trigger: function (name, args) {
+      return $(this.selector).trigger(name, args);
+    },
+
     // Set filter element `ln` as active
     toggleFilter: function (ln) {
       var filterSet = ln.data('qf-filterSet');
@@ -172,6 +171,7 @@
         this.unsetFilter(ln);
         restrict = "disabled";
       }
+      this.trigger('qf-filter-toggled', [ ln ]);
       this.filter(restrict);
     },
 
@@ -213,8 +213,38 @@
           q._activateNode(node);
         }
       });
-      $(this.selector).trigger('qf-filter');
+      this.checkFilters();
+      this.trigger('qf-filter');
     },
+
+    checkFilters: function () {
+      var q = this;
+      var filtersToEnable = {};
+      var fset;
+      for (var key in q.filterSets) {
+        fset = q.filterSets[key];
+        filtersToEnable[key] = $();
+        fset.filters.addClass('disabled');
+      }
+      var nodeFilters;
+      var filterFn = function () {
+        return _.contains(nodeFilters, $(this).data('qf-filterId'));
+      };
+      this.activeNodes.each(function () {
+        var node = $(this);
+        var set, key;
+        var _af;
+        for (key in q.filterSets) {
+          set = q.filterSets[key];
+          nodeFilters = node.data('qf-fs-'+key);
+          _af = set.filters.filter(filterFn);
+          filtersToEnable[key] = filtersToEnable[key].add(_af);
+        }
+      });
+      for (key in filtersToEnable) {
+        filtersToEnable[key].removeClass('disabled');
+      }
+    }
   };
 
   QF.extend = function(prop) {
