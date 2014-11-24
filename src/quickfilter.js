@@ -56,6 +56,12 @@
     // Enable persistance via location hash
     persist: false,
 
+    // Array of "exclusive" filter sets (string IDs)
+    //
+    // An exclusive filter set automatically disables all non-active
+    // filters when the user picks a filter
+    exclusiveFilterSets: [],
+
     // a map of filter IDs -> hash IDs, and back
     //
     // structure:
@@ -241,7 +247,7 @@
     checkFilters: function () {
       var q = this;
       var filtersToEnable = {};
-      var fset;
+      var fset, _key;
       for (var key in q.filterSets) {
         fset = q.filterSets[key];
         filtersToEnable[key] = $();
@@ -251,15 +257,26 @@
       var filterFn = function () {
         return _.contains(nodeFilters, $(this).data('qf-filterId'));
       };
+      var exclusiveFilterFn = function () {
+        return _.contains(q.currentFilters[_key], $(this).data('qf-filterId'));
+      };
       this.activeNodes.each(function () {
         var node = $(this);
-        var set, key;
+        var key, set;
         var _af;
         for (key in q.filterSets) {
           set = q.filterSets[key];
-          nodeFilters = node.data('qf-fs-'+key);
-          _af = set.filters.filter(filterFn);
-          filtersToEnable[key] = filtersToEnable[key].add(_af);
+          _key = key;
+          if (_.contains(q.exclusiveFilterSets, key) &&
+             q.currentFilters[key].length > 0) {
+            // Only enable the filter if it is active
+            _af = set.filters.filter(exclusiveFilterFn);
+            filtersToEnable[key] = filtersToEnable[key].add(_af);
+          } else {
+            nodeFilters = node.data('qf-fs-'+key);
+            _af = set.filters.filter(filterFn);
+            filtersToEnable[key] = filtersToEnable[key].add(_af);
+          }
         }
       });
       for (key in filtersToEnable) {

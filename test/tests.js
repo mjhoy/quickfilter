@@ -211,3 +211,32 @@ test("empty filer sets are hidden", function () {
   ok(!$('#gender').hasClass('disabled'));
   ok(!$('#color').hasClass('disabled'));
 });
+
+module("exclusive filter sets");
+
+test("exclusive filter sets disable non-active filters", function () {
+  var qf = QF.create({
+    selector: "#container",
+    exclusiveFilterSets: [ 'color' ]
+  });
+  var c1 = $('#c-1');
+  var c2 = $('#c-2');
+  var c3 = $('#c-3');
+
+  ok(!c1.hasClass('disabled'));
+  ok(!c2.hasClass('disabled'));
+  ok(!c3.hasClass('disabled'));
+
+  qf.toggleFilter($('#c-1'));
+
+  ok(!c1.hasClass('disabled'));
+  ok(c2.hasClass('disabled'));
+  ok(c3.hasClass('disabled'));
+
+  qf.toggleFilter($('#c-1'));
+
+  ok(!c1.hasClass('disabled'));
+  ok(!c2.hasClass('disabled'));
+  ok(!c3.hasClass('disabled'));
+
+});
