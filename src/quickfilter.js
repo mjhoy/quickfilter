@@ -53,6 +53,21 @@
     // string
     filterId: 'filter-id',
 
+    // Enable persistance via location hash
+    persist: false,
+
+    // a map of filter IDs -> hash IDs, and back
+    //
+    // structure:
+    //
+    // {
+    //   [filterSetName]: {
+    //     hashes: { [hashId]: [filterId] },
+    //     ids:    { [filterId]: [hashId] },
+    //   },
+    // }
+    hashIDmap: false,
+
     disableNode: function (node) {
       node.addClass('disabled');
     },
@@ -149,6 +164,9 @@
       this.nodes = nodes;
       this.activeNodes = nodes;
       this.disabledNodes = $();
+
+      if (this.persist)
+        this.checkHash();
     },
 
     trigger: function (name, args) {
@@ -215,6 +233,8 @@
         }
       });
       this.checkFilters();
+      if (this.persist)
+        this.updateHash();
       this.trigger('qf-filter');
     },
 
@@ -249,6 +269,56 @@
         } else {
           this.filterSets[key].el.removeClass('disabled');
         }
+      }
+    },
+
+    updateHash: function () {
+      var fs, cfs, str, _key;
+      var r = []; // the array to build up for the hash
+      var q = this;
+      var hashMapFn = function (id) {
+        return q.hashIDmap[key].ids[id];
+      };
+      for (var key in this.filterSets) {
+        _key = key;
+        fs = this.filterSets[key];
+        cfs = this.currentFilters[key];
+        if (cfs.length > 0) {
+          if(this.hashIDmap && this.hashIDmap[key])
+            cfs = _.map(cfs, hashMapFn);
+          r.push(key+"="+cfs.join(","));
+        }
+      }
+      if(r.length > 0) {
+        window.location.hash = r.join("&");
+      } else {
+        window.location.hash = "r";
+      }
+    },
+
+    checkHash: function() {
+      var _key;
+      var h = window.location.hash.split("&");
+      var q = this;
+      var activateFn = function(s) {
+        var id = s;
+        if(q.hashIDmap && q.hashIDmap[_key]) {
+          id = q.hashIDmap[_key].hashes[s];
+        }
+        if(id) {
+          q.toggleFilter(q.scoped('[data-filter-set-id="'+_key+'"] [data-filter-id="'+id+'"]'));
+        }
+      };
+      if(h.length > 0) {
+        h[0] = h[0].slice(1);
+        _.each(h, function(s) {
+          for (var key in q.filterSets) {
+            _key = key;
+            if (s.indexOf(key+'=') === 0) {
+              _.each(s.slice(key.length + 1).split(','), activateFn);
+            }
+          }
+        });
       }
     }
   };
