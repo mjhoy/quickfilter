@@ -217,6 +217,7 @@
   //
   // $(selector).qf({ option1: value ... });
   $.fn.qf = function (options) {
+    options = options || {};
     return this.each(function () {
       var optionsWithSelector = _.clone(options);
       optionsWithSelector.selector = this;
