@@ -170,9 +170,6 @@
       this.nodes = nodes;
       this.activeNodes = nodes;
       this.disabledNodes = $();
-
-      if (this.persist)
-        this.checkHash();
     },
 
     trigger: function (name, args) {
