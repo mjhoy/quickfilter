@@ -190,6 +190,7 @@
           q._activateNode(node);
         }
       });
+      $(this.selector).trigger('qf-filter');
     },
   };
 

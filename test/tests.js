@@ -148,3 +148,18 @@ test("jquery extensions works properly", function () {
   ok(_.contains(active, "node-1"));
   ok(_.contains(active, "node-2"));
 });
+
+module("events");
+
+test("filter event", function () {
+  var triggered = [];
+  var qf = $('#container').qf().on('qf-filter', function() {
+    triggered.push("t");
+  }).data('qf');
+
+  deepEqual(triggered, []);
+
+  qf.toggleFilter($('#c-2'));
+
+  deepEqual(triggered, ["t"]);
+});
