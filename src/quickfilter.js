@@ -97,6 +97,9 @@
 
       $(this.filterSelector, filterSet).each(function (filter) {
         $(this).data('qf-filterSet', name);
+        // TODO: older jquerys may have different behavior in
+        // extracting numeric strings as data attributes (so
+        // explicitly convert to string), make a test for this later
         $(this).data('qf-filterId', $(this).data(q.filterId)+'');
       });
 
