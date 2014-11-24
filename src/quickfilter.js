@@ -116,7 +116,7 @@
 
         if (node.data(key))
           list = _.map((node.data(key)+'').split(','), function (s) {
-            return s.trim();
+            return $.trim(s);
           });
 
         node.data('qf-fs-'+key, list);
