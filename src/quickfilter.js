@@ -26,7 +26,8 @@
     this.currentFilters = {};
 
     if(!_initializing) {
-      this.selector = selector;
+      if(selector)
+        this.selector = selector;
       this.init();
     }
   };
