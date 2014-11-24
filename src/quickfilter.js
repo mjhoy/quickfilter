@@ -204,6 +204,18 @@
     return new (QF.extend(proto))();
   };
 
+  // jQuery extension
+  //
+  // $(selector).qf({ option1: value ... });
+  $.fn.qf = function (options) {
+    return this.each(function () {
+      var optionsWithSelector = _.clone(options);
+      optionsWithSelector.selector = this;
+      var qf = QF.create(optionsWithSelector);
+      $(this).data('qf', qf);
+    });
+  };
+
   QF.version = version;
   QF.old_qf = _old_qf;
 

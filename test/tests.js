@@ -18,7 +18,9 @@ test("finds filters, filter sets", function() {
   var key;
   for(key in qf.filterSets)
     keys.push(key);
-  deepEqual(keys, ["color", "gender"]);
+
+  ok(_.contains(keys, "color"));
+  ok(_.contains(keys, "gender"));
 });
 
 test("sets filter set data on nodes", function() {
@@ -130,5 +132,19 @@ test("activeNodes after multiple filters", function () {
   ok(!qf.activeNodes.is('#node-3'));
   ok(qf.activeNodes.is('#node-1'));
   ok(qf.activeNodes.is('#node-2'));
+});
 
+module("jquery extension");
+
+test("jquery extensions works properly", function () {
+  var active = [];
+
+  var qf = $('#container').qf({
+    activateNode: function (node) {
+      active.push(node.attr('id'));
+    },
+  }).data('qf');
+
+  ok(_.contains(active, "node-1"));
+  ok(_.contains(active, "node-2"));
 });
