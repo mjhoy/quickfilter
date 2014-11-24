@@ -163,3 +163,19 @@ test("filter event", function () {
 
   deepEqual(triggered, ["t"]);
 });
+
+module("filter set/unset");
+
+test("filters are set and unset", function () {
+  var qf = QF.create({
+    selector: "#container"
+  });
+  var c1 = $('#c-1');
+  var c2 = $('#c-2');
+
+  ok(!c2.hasClass('active'));
+  ok(!c1.hasClass('active'));
+  qf.toggleFilter($('#c-2'));
+  ok(c2.hasClass('active'));
+  ok(!c1.hasClass('active'));
+});

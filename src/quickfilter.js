@@ -61,6 +61,27 @@
       node.removeClass('disabled');
     },
 
+
+    // Filters can have three states. Available but unset, available
+    // and set, and unavailable. Filters are unavailable if no
+    // currently active nodes are tagged by them (meaning enabling the
+    // filter would reduce the active node set to nothing).
+    setFilter: function (filter) {
+      filter.addClass('active');
+    },
+
+    unsetFilter: function (filter) {
+      filter.removeClass('active');
+    },
+
+    activateFilter: function (filter) {
+
+    },
+
+    disableFilter: function (filter) {
+
+    },
+
     // Internal functions
     _disableNode: function (node) {
       this.activeNodes = this.activeNodes.not(node);
@@ -143,10 +164,12 @@
       if (_.indexOf(currentSet, filterId) === -1) {
         // Filter not active, turn it on
         currentSet.push(filterId);
+        this.setFilter(ln);
         restrict = "active";
       } else {
         // Filter active, turn it off
         this.currentFilters[filterSet] = _.without(currentSet, filterId);
+        this.unsetFilter(ln);
         restrict = "disabled";
       }
       this.filter(restrict);
